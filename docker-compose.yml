@@ -1,0 +1,58 @@
+#To run multiple containers
+
+version: '3.8'
+services:
+  vprodb:
+    build:
+      context: ./Dockerfiles/db
+    image: sagarms97/mysqldb
+    container_name: vprodb
+    ports:
+      - "3306:3306"
+    volumes:
+      - vprodbdata: /var/lib/mysql
+    environmet:
+      - MYSQL_ROOT_PASSWORD=vprodbpass
+
+
+
+  vprocache01:
+    image: memcached                               # official Memcached image
+    ports:
+      - "11211:11211"
+
+
+  vprormq01:
+    image: rabbitmq                                # official RabbitMQ image
+    ports:
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+
+  vproapp:
+    build:
+      context: ./Dockerfiles/app                      # path of Docker file
+    image: sagarms97/tomcatapp
+    container_name: vproapp                            # container name
+    ports:
+      - "8080:8080"
+    volumes:
+      - vproappdata: /usr/local/tomcat/webapps          # volume_name : path
+
+
+  vproweb:
+    build:
+      context: ./Dockerfiles/web
+    image: sagarms97/nginxweb
+    container_name: vproweb
+    ports:
+      - "80:80"
+
+
+volumes:
+  vprodbdata: {}                                     # this creates volume in the docker-engine itself
+  vproappdata: {}
+
+
