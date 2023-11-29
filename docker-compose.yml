@@ -10,8 +10,9 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - vprodbdata: /var/lib/mysql
-    environmet:
+      - type: volume
+        target: /var/lib/mysql
+    environment:
       - MYSQL_ROOT_PASSWORD=vprodbpass
 
 
@@ -39,7 +40,8 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - vproappdata: /usr/local/tomcat/webapps          # volume_name : path
+      - type: volume
+        target: /usr/local/tomcat/webapps          # volume_name : path
 
 
   vproweb:
@@ -52,7 +54,7 @@ services:
 
 
 volumes:
-  vprodbdata: {}                                     # this creates volume in the docker-engine itself
-  vproappdata: {}
+  vprodb: {}                                     # this creates volume in the docker-engine itself
+  vproapp: {}
 
 
